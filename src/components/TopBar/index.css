@@ -1,0 +1,20 @@
+.top-bar {
+	height: 60px;
+	display: flex;
+	padding: 0 20px;
+	align-items: center;
+	background-color: #ffffff;
+	border-left: solid 3px #f5f7fa;
+	justify-content: space-between;
+	border-bottom: solid 3px #f5f7fa;
+}
+
+.top-bar .avatar-portrait {
+	margin-right: 10px;
+}
+
+.top-bar .ant-dropdown-link {
+	color: #666666;
+	cursor: pointer;
+	font-size: 12px;
+}

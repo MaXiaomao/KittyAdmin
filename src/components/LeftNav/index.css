@@ -1,0 +1,32 @@
+.left-nav {
+	width: 260px;
+	height: 100%;
+	background-color: #ffffff;
+}
+
+.left-nav .logo-bar {
+	height: 60px;
+	color: #ff4475;
+	font-size: 22px;
+	font-weight: bold;
+	line-height: 60px;
+	text-align: center;
+	border-bottom: solid 3px #f5f7fa;
+}
+
+.left-nav .logo-date {
+	padding: 50px 0;
+}
+
+.left-nav .logo-date .logo {
+	width: 150px;
+	display: block;
+	margin: 0 auto 20px;
+}
+
+.left-nav .logo-date span {
+	color: #c2c2c2;
+	display: block;
+	font-size: 14px;
+	text-align: center;
+}

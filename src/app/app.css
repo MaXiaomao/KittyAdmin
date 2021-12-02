@@ -1,0 +1,7 @@
+.left-nav {
+	float: left;
+}
+.right-block {
+	float: right;
+	width: calc(100% - 260px);
+}
