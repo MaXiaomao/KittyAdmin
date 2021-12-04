@@ -1,0 +1,63 @@
+.monitoring {
+	padding: 15px;
+	height: calc(100% - 60px);
+}
+.monitoring .statistics {
+	border-radius: 5px;
+	background-color: #ffffff;
+}
+.monitoring .number-lists {
+	display: flex;
+	padding: 30px 0;
+	align-items: center;
+	justify-content: space-around;
+}
+.monitoring .number-item {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+.monitoring .number-lists em {
+	color: #666666;
+	font-size: 12px;
+	font-style: normal;
+	margin-bottom: 15px;
+}
+.monitoring .number-lists p {
+	color: #ff4475;
+	font-size: 20px;
+	font-weight: bold;
+}
+.monitoring .number-lists span {
+	margin-left: 3px;
+}
+.monitoring .number-lists .number-err {
+	color: #67c23a;
+}
+.monitoring .the-article-chart {
+	display: flex;
+	margin-top: 15px;
+	align-items: center;
+	justify-content: space-between;
+	height: calc((100% - 207px) / 2);
+}
+.monitoring .views,
+.monitoring .comments {
+	width: 49.5%;
+	height: 100%;
+	border-radius: 5px;
+	background-color: #ffffff;
+}
+.monitoring .visitors-chart {
+	margin-top: 15px;
+	border-radius: 5px;
+	background-color: #ffffff;
+	height: calc((100% - 207px) / 2);
+}
+.monitoring .chart-height {
+	padding: 15px;
+	height: calc(100% - 60px);
+}
+.monitoring .chart-height .chart-block {
+	height: 100%;
+}

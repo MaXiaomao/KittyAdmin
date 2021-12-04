@@ -1,0 +1,13 @@
+.block-title {
+	height: 60px;
+	display: flex;
+	padding: 0 15px;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: solid 1px #e4e7ed;
+}
+
+.block-title strong {
+	color: #666666;
+	font-size: 18px;
+}

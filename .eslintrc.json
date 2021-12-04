@@ -16,7 +16,9 @@
 	"rules": {
 		"func-names": 0,
 		"no-console": "off",
+		"react/prop-types": "off",
 		"react/react-in-jsx-scope": "off",
+		"react/jsx-props-no-spreading": "off",
 		"import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
 	}
 }
