@@ -1,4 +1,4 @@
-import React from "react"
+import {useState} from "react"
 import {Link} from "react-router-dom"
 import {Menu} from "antd"
 import {
@@ -8,11 +8,11 @@ import {
 	AuditOutlined,
 	SettingOutlined,
 } from "@ant-design/icons"
-import logo from "../../assets/logo.svg"
+import logo from "../../config/images/logo.svg"
 import "./index.css"
 
 const Index = function () {
-	const [navItemArr] = React.useState([
+	const [navItemArr] = useState([
 		{
 			icon: <BarChartOutlined />,
 			name: "网站监控",
@@ -39,10 +39,7 @@ const Index = function () {
 			key: "setUpThe",
 		},
 	])
-
-	const onItemRouter = ({key}) => {
-		console.log(key)
-	}
+	const [defaultSelectedKeys] = useState(["monitoring"])
 
 	return (
 		<div className="left-nav">
@@ -51,7 +48,7 @@ const Index = function () {
 				<img src={logo} className="logo" alt="logo" />
 				<span>2020年03月29日 13:08:19</span>
 			</div>
-			<Menu onClick={onItemRouter} defaultSelectedKeys="monitoring" inlineIndent={48} mode="inline">
+			<Menu defaultSelectedKeys={defaultSelectedKeys} inlineIndent={48} mode="inline">
 				{navItemArr.map((v) => {
 					return (
 						<Menu.Item icon={v.icon} key={v.key}>

@@ -1,7 +1,13 @@
-import {Empty} from "antd"
+import PubSub from "pubsub-js"
+import "./index.css"
+import {useEffect} from "react"
 
 const Index = function () {
-	return <Empty description="功能开发中" />
+	useEffect(() => {
+		PubSub.publish("pageName", "分类管理")
+	}, [])
+
+	return <div className="classification" />
 }
 
 export default Index

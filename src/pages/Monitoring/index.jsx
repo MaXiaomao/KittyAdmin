@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react"
+import PubSub from "pubsub-js"
 import {Button, Radio} from "antd"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {Column, Line} from "@ant-design/plots"
 import {ArrowDownOutlined, ArrowUpOutlined, LinkOutlined} from "@ant-design/icons"
-import BlockTitle from "../../components/BlockTitle"
+import TitleBlock from "../../components/TitleBlock"
 import "./index.css"
 
 const Index = function () {
@@ -97,6 +98,7 @@ const Index = function () {
 	const [commentsData, setCommentsData] = useState([])
 
 	useEffect(() => {
+		PubSub.publish("pageName", "网站监控")
 		setViewsData(chartData)
 		setCommentsData(chartData)
 	}, [])
@@ -134,14 +136,14 @@ const Index = function () {
 	return (
 		<div className="monitoring">
 			<div className="statistics">
-				<BlockTitle title="数据统计">
+				<TitleBlock title="数据统计">
 					<div>
 						<Button type="primary" disabled>
 							<LinkOutlined />
 							数据大屏
 						</Button>
 					</div>
-				</BlockTitle>
+				</TitleBlock>
 				<div className="number-lists">
 					<div className="number-item">
 						<em>文章总量</em>
@@ -170,7 +172,7 @@ const Index = function () {
 			</div>
 			<div className="the-article-chart">
 				<div className="views">
-					<BlockTitle title="浏览量排名" />
+					<TitleBlock title="浏览量排名" />
 					<div className="chart-height">
 						<div className="chart-block">
 							<Column data={viewsData} {...columnConfig} />
@@ -178,7 +180,7 @@ const Index = function () {
 					</div>
 				</div>
 				<div className="comments">
-					<BlockTitle title="评论量排名" />
+					<TitleBlock title="评论量排名" />
 					<div className="chart-height">
 						<div className="chart-block">
 							<Column data={commentsData} color="#67c23a" {...columnConfig} />
@@ -187,12 +189,12 @@ const Index = function () {
 				</div>
 			</div>
 			<div className="visitors-chart">
-				<BlockTitle title="访客走势">
+				<TitleBlock title="访客走势">
 					<Radio.Group onChange={dataChange} defaultValue={7}>
 						<Radio.Button value={7}>近一周</Radio.Button>
 						<Radio.Button value={30}>近一月</Radio.Button>
 					</Radio.Group>
-				</BlockTitle>
+				</TitleBlock>
 				<div className="chart-height">
 					<div className="chart-block">
 						<Line data={visitorsData} {...lineConfig} />

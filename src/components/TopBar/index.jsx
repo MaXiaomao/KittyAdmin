@@ -1,8 +1,21 @@
+import PubSub from "pubsub-js"
 import {Breadcrumb, Avatar, Menu, Dropdown} from "antd"
 import {HomeOutlined, UserOutlined, DownOutlined, KeyOutlined, PoweroffOutlined} from "@ant-design/icons"
 import "./index.css"
+import {useEffect, useState} from "react"
 
 const Index = function () {
+	const [pageName, setPageName] = useState("")
+
+	useEffect(() => {
+		PubSub.subscribe("pageName", (_, value) => {
+			setPageName(value)
+		})
+		return () => {
+			PubSub.unsubscribe("pageName")
+		}
+	}, [])
+
 	const onDropdownItem = ({key}) => {
 		console.log(key)
 	}
@@ -25,7 +38,7 @@ const Index = function () {
 				<Breadcrumb.Item href="">
 					<HomeOutlined />
 				</Breadcrumb.Item>
-				<Breadcrumb.Item>网站监控</Breadcrumb.Item>
+				<Breadcrumb.Item>{pageName}</Breadcrumb.Item>
 			</Breadcrumb>
 			<div className="user-info">
 				<Avatar className="avatar-portrait" icon={<UserOutlined />} />

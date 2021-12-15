@@ -1,0 +1,48 @@
+.the-article {
+	padding: 15px;
+	height: calc(100% - 60px);
+}
+.the-article .main-block {
+	margin-top: 15px;
+	border-radius: 5px;
+	height: calc(100% - 77px);
+	background-color: #ffffff;
+}
+.the-article .main-block .table-block {
+	padding: 15px;
+	height: calc(100% - 123px);
+}
+.the-article .main-block .table-config {
+	padding: 0 15px 15px;
+}
+.the-article .main-block .table-border {
+	display: flex;
+	padding-top: 15px;
+	align-items: center;
+	border-top: solid 1px #e4e7ed;
+	justify-content: space-between;
+}
+.the-article .main-block .the-block {
+	color: #666666;
+	font-size: 14px;
+}
+.the-article .main-block .the-btn {
+	margin-right: 10px;
+}
+.the-article .main-block .edit-btn {
+	color: #ff4475;
+	cursor: pointer;
+	margin-right: 30px;
+}
+.the-article .main-block .delete-btn {
+	color: #999999;
+	cursor: pointer;
+}
+.the-article .form-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.the-article .form-col {
+	width: 49%;
+}

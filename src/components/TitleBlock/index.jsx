@@ -5,7 +5,7 @@ const Index = function (props) {
 	return (
 		<div className="block-title">
 			<strong>{title}</strong>
-			{children}
+			<div>{children}</div>
 		</div>
 	)
 }

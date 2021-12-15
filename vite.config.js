@@ -1,16 +1,26 @@
 import {defineConfig} from "vite"
 import react from "@vitejs/plugin-react"
-import vitePluginImp from "vite-plugin-imp"
+import styleImport, {
+	AndDesignVueResolve,
+	VantResolve,
+	ElementPlusResolve,
+	NutuiResolve,
+	AntdResolve,
+} from "vite-plugin-style-import"
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
 		react(),
-		vitePluginImp({
-			libList: [
+		styleImport({
+			resolves: [AndDesignVueResolve(), VantResolve(), ElementPlusResolve(), NutuiResolve(), AntdResolve()],
+			libs: [
 				{
-					libName: "antd",
-					style: (name) => `antd/lib/${name}/style/index.less`,
+					libraryName: "ant-design-vue",
+					esModule: true,
+					resolveStyle: (name) => {
+						return `ant-design-vue/es/${name}/style/index`
+					},
 				},
 			],
 		}),

@@ -1,14 +1,37 @@
-* {
-	box-sizing: border-box;
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	display: block;
+	background-color: #e4e4e4;
+}
+::-webkit-scrollbar-thumb {
+	width: 6px;
+	height: 6px;
+	display: block;
+	border-radius: 10px;
+	background-color: #ff4475;
+	background-image: -webkit-linear-gradient(
+		45deg,
+		hsla(0, 0%, 100%, 0.2) 25%,
+		transparent 0,
+		transparent 50%,
+		hsla(0, 0%, 100%, 0.2) 0,
+		hsla(0, 0%, 100%, 0.2) 75%,
+		transparent 0,
+		transparent
+	);
 }
 
-html,
-body {
+html{
 	height: 100%;
-	background-color: #f5f7fa;
 }
 
-body,
+
+body{
+	margin: 0;
+	background-color: #f5f7fa !important;
+}
+
 p {
 	margin: 0;
 }

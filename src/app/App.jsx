@@ -1,15 +1,15 @@
-import React from "react"
+import {lazy, Suspense} from "react"
 import {Routes, Route} from "react-router-dom"
 import LeftNav from "../components/LeftNav"
 import TopBar from "../components/TopBar"
 import SpinLoading from "../components/SpinLoading"
 import "./app.css"
 
-const Monitoring = React.lazy(() => import("../pages/Monitoring"))
-const Classification = React.lazy(() => import("../pages/Classification"))
-const TheArticle = React.lazy(() => import("../pages/TheArticle"))
-const Comments = React.lazy(() => import("../pages/Comments"))
-const SetUpThe = React.lazy(() => import("../pages/SetUpThe"))
+const Monitoring = lazy(() => import("../pages/Monitoring"))
+const Classification = lazy(() => import("../pages/Classification"))
+const TheArticle = lazy(() => import("../pages/TheArticle"))
+const Comments = lazy(() => import("../pages/Comments"))
+const SetUpThe = lazy(() => import("../pages/SetUpThe"))
 
 const App = function () {
 	return (
@@ -21,41 +21,41 @@ const App = function () {
 					<Route
 						path="/monitoring"
 						element={
-							<React.Suspense fallback={<SpinLoading />}>
+							<Suspense fallback={<SpinLoading />}>
 								<Monitoring />
-							</React.Suspense>
+							</Suspense>
 						}
 					/>
 					<Route
 						path="/classification"
 						element={
-							<React.Suspense fallback={<SpinLoading />}>
+							<Suspense fallback={<SpinLoading />}>
 								<Classification />
-							</React.Suspense>
+							</Suspense>
 						}
 					/>
 					<Route
 						path="/theArticle"
 						element={
-							<React.Suspense fallback={<SpinLoading />}>
+							<Suspense fallback={<SpinLoading />}>
 								<TheArticle />
-							</React.Suspense>
+							</Suspense>
 						}
 					/>
 					<Route
 						path="/comments"
 						element={
-							<React.Suspense fallback={<SpinLoading />}>
+							<Suspense fallback={<SpinLoading />}>
 								<Comments />
-							</React.Suspense>
+							</Suspense>
 						}
 					/>
 					<Route
 						path="/setUpThe"
 						element={
-							<React.Suspense fallback={<SpinLoading />}>
+							<Suspense fallback={<SpinLoading />}>
 								<SetUpThe />
-							</React.Suspense>
+							</Suspense>
 						}
 					/>
 				</Routes>

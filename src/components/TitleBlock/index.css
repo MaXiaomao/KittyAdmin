@@ -11,3 +11,7 @@
 	color: #666666;
 	font-size: 18px;
 }
+
+.block-title .ant-btn {
+	margin-left: 15px;
+}

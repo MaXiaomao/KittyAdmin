@@ -1,0 +1,19 @@
+.screening-block {
+	padding: 15px;
+	display: flex;
+	border-radius: 5px;
+	align-items: center;
+	background-color: #ffffff;
+	justify-content: space-between;
+}
+.screening-block .ant-select {
+	width: 170px;
+	margin-right: 15px;
+}
+.screening-block .ant-input {
+	width: 250px;
+	margin-right: 15px;
+}
+.screening-block .ant-btn {
+	margin-left: 15px;
+}
