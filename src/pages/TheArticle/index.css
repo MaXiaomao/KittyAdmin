@@ -38,11 +38,19 @@
 	color: #999999;
 	cursor: pointer;
 }
-.the-article .form-row {
+.the-article .main-block .state-table{
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: center;
 }
-.the-article .form-col {
-	width: 49%;
+.the-article .main-block .state-icon{
+	width: 7px;
+	height: 7px;
+	display: block;
+	margin-right: 15px;
+	border-radius: 50%;
+	background-color: #67c23a;
+}
+.the-article .main-block .state-err-icon{
+	background-color: #999999;
 }
