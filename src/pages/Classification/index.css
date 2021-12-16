@@ -1,3 +1,22 @@
 .classification {
 	padding: 15px;
+	height: calc(100% - 60px);
+}
+.classification .main-block{
+	height: 100%;
+	border-radius: 5px;
+	background-color: #ffffff;
+}
+.classification .main-block .table-block {
+	padding: 15px;
+	height: calc(100% - 123px);
+}
+.classification .main-block .edit-btn {
+	color: #ff4475;
+	cursor: pointer;
+	margin-right: 30px;
+}
+.classification .main-block .delete-btn {
+	color: #999999;
+	cursor: pointer;
 }

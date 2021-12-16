@@ -215,7 +215,7 @@ const Index = function () {
 					<Button onClick={() => setVisible(true)} type="primary">
 						添加文章
 					</Button>
-					<Button danger>删除文章</Button>
+					<Button>删除文章</Button>
 				</TitleBlock>
 				<div className="table-block" ref={tableBlock}>
 					<Table
@@ -294,7 +294,7 @@ const Index = function () {
 				}
 			>
 				<Form layout="vertical" form={formRef}>
-					<Row justify="space-between" gutter={16}>
+					<Row justify="space-between" gutter={15}>
 						<Col span={12}>
 							<Form.Item
 								name="title"
@@ -317,7 +317,7 @@ const Index = function () {
 							</Form.Item>
 						</Col>
 					</Row>
-					<Row justify="space-between" gutter={16}>
+					<Row justify="space-between" gutter={15}>
 						<Col span={12}>
 							<Form.Item
 								name="source"
@@ -339,7 +339,7 @@ const Index = function () {
 							</Form.Item>
 						</Col>
 					</Row>
-					<Row justify="space-between" gutter={16}>
+					<Row justify="space-between" gutter={15}>
 						<Col span={12}>
 							<Form.Item
 								name="state"
