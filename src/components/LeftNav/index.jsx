@@ -1,17 +1,12 @@
 import {useState} from "react"
 import {Link} from "react-router-dom"
 import {Menu} from "antd"
-import {
-	BarChartOutlined,
-	AppstoreAddOutlined,
-	FileTextOutlined,
-	AuditOutlined,
-	SettingOutlined,
-} from "@ant-design/icons"
+import {BarChartOutlined, AppstoreAddOutlined, FileTextOutlined, SettingOutlined, TagOutlined} from "@ant-design/icons"
 import logo from "../../config/images/logo.svg"
 import "./index.css"
 
 const Index = function () {
+	const [defaultSelectedKeys] = useState(["monitoring"])
 	const [navItemArr] = useState([
 		{
 			icon: <BarChartOutlined />,
@@ -29,9 +24,9 @@ const Index = function () {
 			key: "theArticle",
 		},
 		{
-			icon: <AuditOutlined />,
-			name: "评论审核",
-			key: "comments",
+			icon: <TagOutlined />,
+			name: "标签管理",
+			key: "Label",
 		},
 		{
 			icon: <SettingOutlined />,
@@ -39,7 +34,6 @@ const Index = function () {
 			key: "setUpThe",
 		},
 	])
-	const [defaultSelectedKeys] = useState(["monitoring"])
 
 	return (
 		<div className="left-nav">

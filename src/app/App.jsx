@@ -8,7 +8,7 @@ import "./app.css"
 const Monitoring = lazy(() => import("../pages/Monitoring"))
 const Classification = lazy(() => import("../pages/Classification"))
 const TheArticle = lazy(() => import("../pages/TheArticle"))
-const Comments = lazy(() => import("../pages/Comments"))
+const Label = lazy(() => import("../pages/Label"))
 const SetUpThe = lazy(() => import("../pages/SetUpThe"))
 
 const App = function () {
@@ -43,10 +43,10 @@ const App = function () {
 						}
 					/>
 					<Route
-						path="/comments"
+						path="/Label"
 						element={
 							<Suspense fallback={<SpinLoading />}>
-								<Comments />
+								<Label />
 							</Suspense>
 						}
 					/>

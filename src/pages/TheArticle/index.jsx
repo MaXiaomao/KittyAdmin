@@ -283,7 +283,7 @@ const Index = function () {
 				closable={false}
 				getContainer={false}
 				onClose={drawerFormReturn}
-				width="40%"
+				width="70%"
 				extra={
 					<Space>
 						<Button onClick={drawerFormPass} type="primary">
