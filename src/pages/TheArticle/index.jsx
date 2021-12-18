@@ -1,12 +1,33 @@
 import {useEffect, useRef, useState} from "react"
 import moment from "moment"
 import PubSub from "pubsub-js"
+import ImgCrop from "antd-img-crop"
 import MarkdownIt from "markdown-it"
 import MdEditor from "react-markdown-editor-lite"
-import {Button, Drawer, Form, Input, Pagination, Select, Space, Table, DatePicker, Row, Col} from "antd"
+import {
+	Button,
+	Drawer,
+	Form,
+	Input,
+	Pagination,
+	Select,
+	Space,
+	Table,
+	DatePicker,
+	Row,
+	Col,
+	Upload,
+	Tag,
+	Modal,
+} from "antd"
+import {InboxOutlined} from "@ant-design/icons"
+import {randomColor} from "../../config/plugIn"
 import TitleBlock from "../../components/TitleBlock"
 import Screening from "../../components/Screening"
+import FileItem from "../../components/FileItem"
 import "react-markdown-editor-lite/lib/index.css"
+import "antd/es/modal/style"
+import "antd/es/slider/style"
 import "./index.css"
 
 const Index = function () {
@@ -16,6 +37,10 @@ const Index = function () {
 	const [selectedRowKeys, setSelectedRowKeys] = useState([])
 	const [tableHeight, setTableHeight] = useState(0)
 	const [visible, setVisible] = useState(false)
+	const [modalThumbnailState, setModalThumbnailState] = useState(false)
+	const [modalThumbnailLoading, setModalThumbnailLoading] = useState(false)
+	const [thumbnailCurrent, setThumbnailCurrent] = useState("")
+	const [fileData, setFileData] = useState([])
 	const [formBody, setFormBody] = useState()
 	const tableBlock = useRef()
 	const mdEditorRef = useRef()
@@ -66,6 +91,27 @@ const Index = function () {
 			}
 		)
 	}
+	const browseThumbnail = (_, event) => {
+		// eslint-disable-next-line no-underscore-dangle
+		if (event._reactName === "onClick") {
+			setModalThumbnailLoading(true)
+			setTimeout(() => {
+				setThumbnailCurrent(formRef.getFieldsValue().thumbnail)
+				setModalThumbnailState(true)
+				setModalThumbnailLoading(false)
+			}, 3000)
+		}
+	}
+	const fileItemCurrent = (value) => {
+		setThumbnailCurrent(value.url)
+	}
+	const modalThumbnailPass = () => {
+		formRef.setFieldsValue({thumbnail: thumbnailCurrent})
+		setModalThumbnailState(false)
+	}
+	const modalThumbnailReturn = () => {
+		setModalThumbnailState(false)
+	}
 	const aaaaa = () => {
 		setVisible(true)
 		formRef.setFieldsValue({title: "从地上到处都是"})
@@ -79,7 +125,11 @@ const Index = function () {
 				id: "1",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -88,7 +138,11 @@ const Index = function () {
 				id: "2",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -97,7 +151,11 @@ const Index = function () {
 				id: "3",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -106,7 +164,11 @@ const Index = function () {
 				id: "4",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -115,7 +177,11 @@ const Index = function () {
 				id: "5",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -124,7 +190,11 @@ const Index = function () {
 				id: "6",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -133,7 +203,11 @@ const Index = function () {
 				id: "7",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -142,7 +216,11 @@ const Index = function () {
 				id: "8",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -151,7 +229,11 @@ const Index = function () {
 				id: "9",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -160,7 +242,11 @@ const Index = function () {
 				id: "10",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
@@ -169,10 +255,104 @@ const Index = function () {
 				id: "11",
 				title: "程序员全职接单一个月的感触",
 				views: 32,
-				source: "掘金前端",
+				label: [
+					{id: 1, name: "前端"},
+					{id: 2, name: "服务器"},
+					{id: 3, name: "Node"},
+				],
 				state: false,
 				comment: 80,
 				time: "2020-11-29 18:00:00",
+			},
+		])
+		setFileData([
+			{
+				filename: "1",
+				isDirectory: true,
+				createTime: "2021-03-23T06:07:30.409Z",
+				size: "4.00KB",
+				type: "",
+				url: "",
+			},
+			{
+				filename: "2020",
+				isDirectory: true,
+				createTime: "2020-12-28T15:17:32.055Z",
+				size: "4.00KB",
+				type: "",
+				url: "",
+			},
+			{
+				filename: "2021",
+				isDirectory: true,
+				createTime: "2021-12-07T14:32:19.318Z",
+				size: "4.00KB",
+				type: "",
+				url: "",
+			},
+			{
+				filename: "7897",
+				isDirectory: true,
+				createTime: "2021-12-17T03:04:28.675Z",
+				size: "4.00KB",
+				type: "",
+				url: "",
+			},
+			{
+				filename: "hello",
+				isDirectory: true,
+				createTime: "2021-04-06T12:47:40.072Z",
+				size: "4.00KB",
+				type: "",
+				url: "",
+			},
+			{
+				filename: "tt",
+				isDirectory: true,
+				createTime: "2021-11-10T08:27:44.925Z",
+				size: "4.00KB",
+				type: "",
+				url: "",
+			},
+			{
+				filename: "测试目录",
+				isDirectory: true,
+				createTime: "2021-08-12T18:01:51.444Z",
+				size: "4.00KB",
+				type: "",
+				url: "",
+			},
+			{
+				filename: "QQ图片20210527172847.gif",
+				isDirectory: false,
+				createTime: "2021-06-03T06:39:52.694Z",
+				size: "93.65KB",
+				type: "image/gif",
+				url: "/api/nkm-cms/readFile?path=/upload/QQ图片20210527172847.gif",
+			},
+			{
+				filename: "file-icon.zip",
+				isDirectory: false,
+				createTime: "2021-02-05T17:47:46.191Z",
+				size: "12.76KB",
+				type: "application/zip",
+				url: "/api/nkm-cms/readFile?path=/upload/file-icon.zip",
+			},
+			{
+				filename: "下载.jpg",
+				isDirectory: false,
+				createTime: "2021-03-19T03:34:54.369Z",
+				size: "31.08KB",
+				type: "image/jpeg",
+				url: "/api/nkm-cms/readFile?path=/upload/下载.jpg",
+			},
+			{
+				filename: "微信图片_202010221547513.jpg",
+				isDirectory: false,
+				createTime: "2021-03-18T10:12:16.753Z",
+				size: "155.91KB",
+				type: "image/jpeg",
+				url: "/api/nkm-cms/readFile?path=/upload/微信图片_202010221547513.jpg",
 			},
 		])
 	}, [])
@@ -226,8 +406,7 @@ const Index = function () {
 						pagination={false}
 						rowKey="id"
 					>
-						<Table.Column title="文章标题" dataIndex="title" key="id" />
-						<Table.Column title="文章来源" dataIndex="source" width={200} align="center" key="id" />
+						<Table.Column title="文章标题" dataIndex="title" width={300} key="id" />
 						<Table.Column
 							title="文章状态"
 							dataIndex="state"
@@ -243,7 +422,25 @@ const Index = function () {
 						/>
 						<Table.Column title="浏览量" dataIndex="views" width={150} align="center" key="id" />
 						<Table.Column title="评论数量" dataIndex="comment" width={150} align="center" key="id" />
-						<Table.Column title="发布时间" dataIndex="time" width={300} key="id" />
+						<Table.Column
+							title="文章标签"
+							dataIndex="label"
+							width={300}
+							align="center"
+							key="id"
+							render={(label) => (
+								<>
+									{label.map((v) => {
+										return (
+											<Tag color={randomColor()} key={v.id}>
+												{v.name}
+											</Tag>
+										)
+									})}
+								</>
+							)}
+						/>
+						<Table.Column title="发布时间" dataIndex="time" key="id" />
 						<Table.Column
 							title="操作"
 							width={150}
@@ -293,78 +490,83 @@ const Index = function () {
 					</Space>
 				}
 			>
-				<Form layout="vertical" form={formRef}>
-					<Row justify="space-between" gutter={15}>
-						<Col span={12}>
-							<Form.Item
-								name="title"
-								label="文章标题"
-								rules={[{required: true, message: "请输入文章标题"}]}
-							>
-								<Input placeholder="请输入文章标题" />
+				<Row gutter={15}>
+					<Col span={16}>
+						<Form layout="vertical" form={formRef}>
+							<Row gutter={15}>
+								<Col span={12}>
+									<Form.Item
+										name="title"
+										label="文章标题"
+										rules={[{required: true, message: "请输入文章标题"}]}
+									>
+										<Input placeholder="请输入文章标题" />
+									</Form.Item>
+								</Col>
+								<Col span={12}>
+									<Form.Item
+										name="classify"
+										label="文章分类"
+										rules={[{required: true, message: "请选择文章分类"}]}
+									>
+										<Select placeholder="请选择文章分类">
+											<Select.Option value="xiao">Xiaoxiao Fu</Select.Option>
+											<Select.Option value="mao">Maomao Zhou</Select.Option>
+										</Select>
+									</Form.Item>
+								</Col>
+							</Row>
+							<Row gutter={15}>
+								<Col span={12}>
+									<Form.Item name="label" label="文章标签">
+										<Select mode="multiple" placeholder="请选择文章标签">
+											<Select.Option value="Javascript">Javascript</Select.Option>
+											<Select.Option value="CSS3">CSS3</Select.Option>
+											<Select.Option value="NodeJS">NodeJS</Select.Option>
+										</Select>
+									</Form.Item>
+								</Col>
+								<Col span={12}>
+									<Form.Item name="state" label="文章状态">
+										<Select allowClear placeholder="请选择文章状态">
+											<Select.Option value="xiao">置顶</Select.Option>
+											<Select.Option value="mao">隐藏</Select.Option>
+										</Select>
+									</Form.Item>
+								</Col>
+							</Row>
+							<Row gutter={15}>
+								<Col span={12}>
+									<Form.Item name="time" initialValue={moment()} label="发布时间">
+										<DatePicker showTime style={{width: "100%"}} placeholder="请选择发布时间" />
+									</Form.Item>
+								</Col>
+								<Col span={12}>
+									<Form.Item name="thumbnail" label="缩略图地址">
+										<Input.Search
+											allowClear
+											enterButton="浏览"
+											loading={modalThumbnailLoading}
+											onSearch={browseThumbnail}
+											placeholder="请选择或输入图片地址"
+										/>
+									</Form.Item>
+								</Col>
+							</Row>
+							<Form.Item name="describe" label="文章描述">
+								<Input.TextArea rows={4} placeholder="请输入文章描述" />
 							</Form.Item>
-						</Col>
-						<Col span={12}>
-							<Form.Item
-								name="classify"
-								label="文章分类"
-								rules={[{required: true, message: "请选择文章分类"}]}
-							>
-								<Select placeholder="请选择文章分类">
-									<Select.Option value="xiao">Xiaoxiao Fu</Select.Option>
-									<Select.Option value="mao">Maomao Zhou</Select.Option>
-								</Select>
-							</Form.Item>
-						</Col>
-					</Row>
-					<Row justify="space-between" gutter={15}>
-						<Col span={12}>
-							<Form.Item
-								name="source"
-								initialValue="本站"
-								label="文章来源"
-								rules={[{required: true, message: "请输入文章来源"}]}
-							>
-								<Input placeholder="请输入文章来源" />
-							</Form.Item>
-						</Col>
-						<Col span={12}>
-							<Form.Item
-								name="sourceUrl"
-								initialValue="maxiaomao.com"
-								label="来源链接"
-								rules={[{required: true, message: "请输入来源链接"}]}
-							>
-								<Input addonBefore="https://" placeholder="请输入来源链接" />
-							</Form.Item>
-						</Col>
-					</Row>
-					<Row justify="space-between" gutter={15}>
-						<Col span={12}>
-							<Form.Item
-								name="state"
-								initialValue="展示"
-								label="文章状态"
-								rules={[{required: true, message: "请选择文章状态"}]}
-							>
-								<Select placeholder="请选择文章状态">
-									<Select.Option value="xiao">展示</Select.Option>
-									<Select.Option value="mao">隐藏</Select.Option>
-								</Select>
-							</Form.Item>
-						</Col>
-						<Col span={12}>
-							<Form.Item
-								name="time"
-								initialValue={moment()}
-								label="发布时间"
-								rules={[{required: true, message: "请选择发布时间"}]}
-							>
-								<DatePicker showTime style={{width: "100%"}} placeholder="请选择发布时间" />
-							</Form.Item>
-						</Col>
-					</Row>
-				</Form>
+						</Form>
+					</Col>
+					<Col span={8}>
+						<ImgCrop aspect={1 / 0.7} grid quality={0.7}>
+							<Upload.Dragger listType="picture" className="thumbnail-upload">
+								<InboxOutlined style={{color: "#ff4475", fontSize: "40px"}} />
+								<p>单击或拖动文件到此区域进行上传</p>
+							</Upload.Dragger>
+						</ImgCrop>
+					</Col>
+				</Row>
 				<MdEditor
 					value={formBody}
 					renderHTML={(text) => mdParser.render(text)}
@@ -373,6 +575,27 @@ const Index = function () {
 					ref={mdEditorRef}
 				/>
 			</Drawer>
+			<Modal
+				title="缩略图选择"
+				visible={modalThumbnailState}
+				getContainer={false}
+				onOk={modalThumbnailPass}
+				onCancel={modalThumbnailReturn}
+				width={958}
+			>
+				<div className="file-list">
+					{fileData.map((v) => {
+						return (
+							<FileItem
+								file={v}
+								onClick={() => fileItemCurrent(v)}
+								className={thumbnailCurrent === v.url ? "file-item-current" : ""}
+								key={v.filename}
+							/>
+						)
+					})}
+				</div>
+			</Modal>
 		</div>
 	)
 }

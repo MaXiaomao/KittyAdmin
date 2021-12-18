@@ -1,0 +1,40 @@
+.file-item {
+    width: 130px;
+    display: flex;
+    padding: 15px 10px;
+    border-radius: 5px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.file-item:hover {
+    background-color: #f1f5fa;
+}
+
+.file-item-current {
+    background-color: #f1f5fa;
+}
+
+.file-item i {
+    width: 100px;
+    height: 100px;
+    background-size: 100%;
+    background-position: center;
+}
+
+.file-item .folder-icon {
+    background-image: url("../../config/images/folder-icon.png");
+}
+
+.file-item .unknown-icon {
+    background-image: url("../../config/images/unknown-icon.png");
+}
+
+.file-item span {
+    width: 90%;
+    margin-top: 5px;
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

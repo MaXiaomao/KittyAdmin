@@ -54,3 +54,14 @@
 .the-article .main-block .state-err-icon{
 	background-color: #999999;
 }
+.the-article .thumbnail-upload{
+	height: 206px;
+	margin-top: 30px;
+}
+.the-article .thumbnail-upload p{
+	margin-top: 15px !important;
+}
+.the-article .file-list{
+	display: flex;
+	flex-wrap: wrap;
+}
