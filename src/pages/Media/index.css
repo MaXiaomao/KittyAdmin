@@ -1,0 +1,34 @@
+.media{
+    padding: 15px;
+    height: calc(100% - 60px);
+}
+.media .main-block{
+    height: 100%;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+.media .file-list{
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    height: calc(100% - 113px);
+}
+.media .file-config{
+    padding: 0 15px 15px;
+}
+.media .file-border{
+    display: flex;
+    padding-top: 15px;
+    align-items: center;
+    border-top: solid 1px #e4e7ed;
+    justify-content: space-between;
+}
+.media .file-border span{
+    color: #ff4475;
+    cursor: pointer;
+    user-select: none;
+}
+.media .file-border i{
+    color: #e4e7ed;
+    padding: 0 10px;
+}

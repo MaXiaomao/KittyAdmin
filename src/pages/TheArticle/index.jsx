@@ -588,7 +588,7 @@ const Index = function () {
 						return (
 							<FileItem
 								file={v}
-								onClick={() => fileItemCurrent(v)}
+								fileClick={() => fileItemCurrent(v)}
 								className={thumbnailCurrent === v.url ? "file-item-current" : ""}
 								key={v.filename}
 							/>

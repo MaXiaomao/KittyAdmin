@@ -8,6 +8,7 @@ import "./app.css"
 const Monitoring = lazy(() => import("../pages/Monitoring"))
 const Classification = lazy(() => import("../pages/Classification"))
 const TheArticle = lazy(() => import("../pages/TheArticle"))
+const Media = lazy(() => import("../pages/Media"))
 const Label = lazy(() => import("../pages/Label"))
 const SetUpThe = lazy(() => import("../pages/SetUpThe"))
 
@@ -39,6 +40,14 @@ const App = function () {
 						element={
 							<Suspense fallback={<SpinLoading />}>
 								<TheArticle />
+							</Suspense>
+						}
+					/>
+					<Route
+						path="/Media"
+						element={
+							<Suspense fallback={<SpinLoading />}>
+								<Media />
 							</Suspense>
 						}
 					/>

@@ -1,4 +1,4 @@
-.file-item {
+.file-item-context .file-item {
     width: 130px;
     display: flex;
     padding: 15px 10px;
@@ -7,34 +7,61 @@
     flex-direction: column;
 }
 
-.file-item:hover {
+.file-item-context .file-item:hover {
     background-color: #f1f5fa;
 }
 
-.file-item-current {
+.file-item-context .file-item-current {
     background-color: #f1f5fa;
 }
 
-.file-item i {
+.file-item-context .file-item i {
     width: 100px;
     height: 100px;
     background-size: 100%;
     background-position: center;
 }
 
-.file-item .folder-icon {
+.file-item-context .file-item .folder-icon {
     background-image: url("../../config/images/folder-icon.png");
 }
 
-.file-item .unknown-icon {
+.file-item-context .file-item .unknown-icon {
     background-image: url("../../config/images/unknown-icon.png");
 }
 
-.file-item span {
+.file-item-context .file-item span {
     width: 90%;
     margin-top: 5px;
     overflow: hidden;
     text-align: center;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.file-item-context .context {
+    z-index: 999;
+    display: none;
+    padding: 5px 0;
+    position: fixed;
+    min-width: 150px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d;
+}
+
+.file-item-context .context .item {
+    font-size: 14px;
+    padding: 0 20px;
+    cursor: pointer;
+    line-height: 30px;
+}
+
+.file-item-context .context .item:hover {
+    color: #ffffff;
+    background-color: #ff4475;
+}
+
+.file-item-context .context-current + .context{
+    display: block;
 }

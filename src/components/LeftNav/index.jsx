@@ -1,7 +1,14 @@
 import {useState} from "react"
 import {Link} from "react-router-dom"
 import {Menu} from "antd"
-import {BarChartOutlined, AppstoreAddOutlined, FileTextOutlined, SettingOutlined, TagOutlined} from "@ant-design/icons"
+import {
+	BarChartOutlined,
+	AppstoreAddOutlined,
+	FileTextOutlined,
+	SettingOutlined,
+	TagOutlined,
+	PictureOutlined,
+} from "@ant-design/icons"
 import logo from "../../config/images/logo.svg"
 import "./index.css"
 
@@ -22,6 +29,11 @@ const Index = function () {
 			icon: <FileTextOutlined />,
 			name: "文章管理",
 			key: "theArticle",
+		},
+		{
+			icon: <PictureOutlined />,
+			name: "媒体管理",
+			key: "Media",
 		},
 		{
 			icon: <TagOutlined />,
