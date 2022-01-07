@@ -1,5 +1,5 @@
-import {useState} from "react"
-import {Link} from "react-router-dom"
+import {useEffect, useState} from "react"
+import {Link, useLocation, matchRoutes} from "react-router-dom"
 import {Menu} from "antd"
 import {
 	BarChartOutlined,
@@ -9,16 +9,18 @@ import {
 	TagOutlined,
 	PictureOutlined,
 } from "@ant-design/icons"
+import router from "../../router"
 import logo from "../../config/images/logo.svg"
 import "./index.css"
 
 const Index = function () {
-	const [defaultSelectedKeys] = useState(["monitoring"])
+	const [defaultSelectedKeys, setDefaultSelectedKeys] = useState(["/"])
+	const [initStaTe, setInitStaTe] = useState(false)
 	const [navItemArr] = useState([
 		{
 			icon: <BarChartOutlined />,
 			name: "网站监控",
-			key: "monitoring",
+			key: "/",
 		},
 		{
 			icon: <AppstoreAddOutlined />,
@@ -33,12 +35,12 @@ const Index = function () {
 		{
 			icon: <PictureOutlined />,
 			name: "媒体管理",
-			key: "Media",
+			key: "media",
 		},
 		{
 			icon: <TagOutlined />,
 			name: "标签管理",
-			key: "Label",
+			key: "label",
 		},
 		{
 			icon: <SettingOutlined />,
@@ -46,7 +48,17 @@ const Index = function () {
 			key: "setUpThe",
 		},
 	])
+	const location = useLocation()
 
+	useEffect(() => {
+		const routes = matchRoutes(router, location.pathname)
+		setDefaultSelectedKeys([routes[1].route.path === undefined ? "/" : routes[1].route.path])
+		setInitStaTe(true)
+	}, [])
+
+	if (!initStaTe) {
+		return null
+	}
 	return (
 		<div className="left-nav">
 			<div className="logo-bar">博客管理系统</div>
