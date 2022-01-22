@@ -34,7 +34,6 @@ const AxiosDoll = function (method, url, params = {}) {
 	return Axios({
 		method,
 		url,
-		baseURL: "http://8.141.163.16",
 		headers: {token: sessionStorage.getItem("token")},
 		...params,
 	})

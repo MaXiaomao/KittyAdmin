@@ -2,7 +2,7 @@ import Axios from "axios"
 import AxiosDoll from "./config"
 
 export const Login = (params) => {
-	return Axios.post("http://8.141.163.16/api/user/login", params)
+	return Axios.post("/api/user/login", params)
 }
 
 // 添加分类信息
