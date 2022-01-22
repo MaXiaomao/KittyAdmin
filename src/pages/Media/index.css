@@ -32,3 +32,12 @@
     color: #e4e7ed;
     padding: 0 10px;
 }
+.media .m-upload{
+    height: 150px;
+}
+.media .m-upload p{
+    margin-top: 10px !important;
+}
+.media .item-current{
+    background-color: #f1f5fa;
+}

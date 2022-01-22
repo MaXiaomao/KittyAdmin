@@ -1,23 +1,51 @@
 import {useEffect, useState} from "react"
-import {Button, Modal, Upload} from "antd"
-import {PlusOutlined} from "@ant-design/icons"
+import {Button, Form, Input, Modal, notification, Upload} from "antd"
+import {InboxOutlined} from "@ant-design/icons"
 import TitleBlock from "../../components/TitleBlock"
 import FileItem from "../../components/FileItem"
+import {postFile, getFile, postFolder, deleteFile} from "../../axios"
 import "./index.css"
 
 const Index = function () {
 	const [fileData, setFileData] = useState([])
 	const [modalUploadState, setModalUploadState] = useState(false)
-	const [uploadFileList, setUploadFileList] = useState([])
+	const [modalLoading, setModalLoading] = useState(false)
+	const [uploadList, setUploadList] = useState([])
 	const [path, setPath] = useState([])
+	const [folderState, setFolderState] = useState(false)
+	const [folderLoading, setFolderLoading] = useState(false)
+	const [itemCurrent, setItemCurrent] = useState("")
+	const [folderForm] = Form.useForm()
 
-	const modalUploadPass = () => {}
+	const fileGet = () => {
+		getFile({path: path.length === 0 ? "/" : `/${path.join("/")}`}).then((res) => {
+			setFileData(res.data)
+		})
+	}
 	const modalUploadReturn = () => {
+		setModalLoading(false)
 		setModalUploadState(false)
+		setUploadList([])
+	}
+	const modalUploadPass = () => {
+		setModalLoading(true)
+		const formData = new FormData()
+		formData.append("path", path.length === 0 ? "/" : `/${path.join("/")}`)
+		uploadList.forEach((file) => {
+			formData.append("file", file)
+		})
+		postFile(formData).then((res) => {
+			notification.success({
+				message: "媒体消息",
+				description: res.data.message,
+			})
+			modalUploadReturn()
+			fileGet()
+		})
 	}
 	const pathConcat = (file) => {
 		if (file.type === "") {
-			setPath((value) => [...value, file.filename])
+			setPath((value) => [...value, file.name])
 		}
 	}
 	const pathReturn = () => {
@@ -25,122 +53,99 @@ const Index = function () {
 			setPath((value) => value.slice(0, -1))
 		}
 	}
+	const uploadBefore = (_, fileList) => {
+		if (uploadList.length < 5) {
+			setUploadList([...uploadList, ...fileList])
+		}
+		return false
+	}
+	const onRemove = (file) => {
+		const index = uploadList.indexOf(file)
+		const newFileList = uploadList.slice()
+		newFileList.splice(index, 1)
+		setUploadList(newFileList)
+	}
+	const folderReturn = () => {
+		setFolderLoading(false)
+		setFolderState(false)
+	}
+	const folderPass = () => {
+		folderForm.validateFields().then(
+			() => {
+				setFolderLoading(true)
+				const folderName = folderForm.getFieldsValue().name
+				const folderPath = path.length === 0 ? `/${folderName}` : `/${path.join("/")}/${folderName}`
+				postFolder({path: folderPath}).then((res) => {
+					notification.success({
+						message: "媒体消息",
+						description: res.data.message,
+					})
+					fileGet()
+					folderReturn()
+				})
+			},
+			(err) => {
+				console.log(err)
+			}
+		)
+	}
+	const folderCurrent = (value) => {
+		if (value.type === "") {
+			setItemCurrent(value.name)
+		} else {
+			setItemCurrent("")
+		}
+	}
+	const fileDelete = () => {
+		if (itemCurrent !== "" && itemCurrent !== "Thumbnail") {
+			const folderPath = path.length === 0 ? `/${itemCurrent}` : `/${path.join("/")}/${itemCurrent}`
+			deleteFile({path: folderPath}).then((res) => {
+				fileGet()
+				notification.success({
+					message: "媒体消息",
+					description: res.data.message,
+				})
+			})
+		}
+	}
 
 	useEffect(() => {
-		setFileData([
-			{
-				filename: "1",
-				isDirectory: true,
-				createTime: "2021-03-23T06:07:30.409Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "2020",
-				isDirectory: true,
-				createTime: "2020-12-28T15:17:32.055Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "2021",
-				isDirectory: true,
-				createTime: "2021-12-07T14:32:19.318Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "7897",
-				isDirectory: true,
-				createTime: "2021-12-17T03:04:28.675Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "hello",
-				isDirectory: true,
-				createTime: "2021-04-06T12:47:40.072Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "tt",
-				isDirectory: true,
-				createTime: "2021-11-10T08:27:44.925Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "测试目录",
-				isDirectory: true,
-				createTime: "2021-08-12T18:01:51.444Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "QQ图片20210527172847.gif",
-				isDirectory: false,
-				createTime: "2021-06-03T06:39:52.694Z",
-				size: "93.65KB",
-				type: "image/gif",
-				url: "/api/nkm-cms/readFile?path=/upload/QQ图片20210527172847.gif",
-			},
-			{
-				filename: "file-icon.zip",
-				isDirectory: false,
-				createTime: "2021-02-05T17:47:46.191Z",
-				size: "12.76KB",
-				type: "application/zip",
-				url: "/api/nkm-cms/readFile?path=/upload/file-icon.zip",
-			},
-			{
-				filename: "下载.jpg",
-				isDirectory: false,
-				createTime: "2021-03-19T03:34:54.369Z",
-				size: "31.08KB",
-				type: "image/jpeg",
-				url: "/api/nkm-cms/readFile?path=/upload/下载.jpg",
-			},
-			{
-				filename: "微信图片_202010221547513.jpg",
-				isDirectory: false,
-				createTime: "2021-03-18T10:12:16.753Z",
-				size: "155.91KB",
-				type: "image/jpeg",
-				url: "/api/nkm-cms/readFile?path=/upload/微信图片_202010221547513.jpg",
-			},
-		])
+		fileGet()
+		setItemCurrent("")
 	}, [path])
 
-	const uploadButton = (
-		<div>
-			<PlusOutlined />
-			<div style={{marginTop: 8}}>Upload</div>
-		</div>
-	)
 	return (
 		<div className="media">
 			<div className="main-block">
 				<TitleBlock title="媒体管理">
+					<Button onClick={() => setFolderState(true)} type="primary">
+						新建文件夹
+					</Button>
 					<Button onClick={() => setModalUploadState(true)} type="primary">
 						上传文件
 					</Button>
+					<Button onClick={fileDelete}>删除文件夹</Button>
 				</TitleBlock>
 				<div className="file-list">
 					{fileData.map((v) => {
-						return <FileItem file={v} fileClick={() => pathConcat(v)} context key={v.filename} />
+						return (
+							<FileItem
+								className={itemCurrent === v.name ? "item-current" : ""}
+								file={v}
+								path={path.length === 0 ? "" : `/${path.join("/")}`}
+								fileDoubleClick={() => pathConcat(v)}
+								fileClick={() => folderCurrent(v)}
+								getData={() => fileGet()}
+								context
+								key={v.name}
+							/>
+						)
 					})}
 				</div>
 				<div className="file-config">
 					<div className="file-border">
 						<div>
+							{/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
 							<span onClick={pathReturn} role="button" tabIndex="0">
 								返回上一级
 							</span>
@@ -151,15 +156,41 @@ const Index = function () {
 					</div>
 				</div>
 			</div>
-			<Modal title="文件上传" visible={modalUploadState} onOk={modalUploadPass} onCancel={modalUploadReturn}>
-				<Upload
-					action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-					listType="picture-card"
-					fileList={uploadFileList}
-					onChange={() => setUploadFileList(fileList)}
+			<Modal
+				title="文件上传"
+				visible={modalUploadState}
+				onOk={modalUploadPass}
+				onCancel={modalUploadReturn}
+				confirmLoading={modalLoading}
+				getContainer={false}
+				width={601}
+			>
+				<Upload.Dragger
+					className="m-upload"
+					fileList={uploadList}
+					onRemove={onRemove}
+					beforeUpload={uploadBefore}
+					listType="picture"
+					accept=".jpg, .png, .gif, .zip, .docx, .pptx, .xlsx"
+					multiple
 				>
-					{uploadFileList.length >= 8 ? null : uploadButton}
-				</Upload>
+					<InboxOutlined style={{color: "#ff4475", fontSize: "40px"}} />
+					<p>单击或拖动文件到此区域进行上传</p>
+				</Upload.Dragger>
+			</Modal>
+			<Modal
+				title="新建文件夹"
+				visible={folderState}
+				onOk={folderPass}
+				onCancel={folderReturn}
+				confirmLoading={folderLoading}
+				getContainer={false}
+			>
+				<Form preserve={false} form={folderForm}>
+					<Form.Item label="名称" name="name" rules={[{required: true, message: "请输入文件夹名称"}]}>
+						<Input placeholder="请输入文件夹名称" />
+					</Form.Item>
+				</Form>
 			</Modal>
 		</div>
 	)

@@ -1,5 +1,5 @@
 import {useEffect} from "react"
-import {Navigate, useNavigate} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 import {Button, Form, Input, notification} from "antd"
 import {UserOutlined, LockOutlined} from "@ant-design/icons"
 import {Login} from "../../axios"
@@ -46,7 +46,6 @@ const Index = function () {
 						>
 							<Input placeholder="请输入用户名" prefix={<UserOutlined />} />
 						</Form.Item>
-
 						<Form.Item
 							name="password"
 							required={false}
@@ -55,7 +54,6 @@ const Index = function () {
 						>
 							<Input.Password placeholder="请输入用户密码" prefix={<LockOutlined />} />
 						</Form.Item>
-
 						<Form.Item>
 							<Button type="primary" htmlType="submit" block>
 								登录

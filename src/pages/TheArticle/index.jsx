@@ -1,5 +1,4 @@
 import {useEffect, useRef, useState} from "react"
-import moment from "moment"
 import PubSub from "pubsub-js"
 import ImgCrop from "antd-img-crop"
 import MarkdownIt from "markdown-it"
@@ -17,17 +16,19 @@ import {
 	Row,
 	Col,
 	Upload,
-	Tag,
 	Modal,
+	notification,
+	Popconfirm,
 } from "antd"
 import {InboxOutlined} from "@ant-design/icons"
-import {randomColor} from "../../config/plugIn"
+import moment from "moment"
 import TitleBlock from "../../components/TitleBlock"
 import Screening from "../../components/Screening"
 import FileItem from "../../components/FileItem"
 import "react-markdown-editor-lite/lib/index.css"
 import "antd/es/modal/style"
 import "antd/es/slider/style"
+import {getClassify, getFile, getLabel, postArticle, getArticle, deleteArticle, putArticle} from "../../axios"
 import "./index.css"
 
 const Index = function () {
@@ -41,50 +42,75 @@ const Index = function () {
 	const [modalThumbnailLoading, setModalThumbnailLoading] = useState(false)
 	const [thumbnailCurrent, setThumbnailCurrent] = useState("")
 	const [fileData, setFileData] = useState([])
-	const [formBody, setFormBody] = useState()
+	const [formBody, setFormBody] = useState("")
+	const [labelData, setLabelData] = useState([])
+	const [classifyData, setClassifyData] = useState([])
+	const [articleTotal, setArticleTotal] = useState(0)
+	const [page, setPage] = useState(1)
+	const [pageSize, setPageSize] = useState(10)
+	const [drawerTitle, setDrawerTitle] = useState("添加文章")
+	const [articleLoading, setArticleLoading] = useState(false)
+	const [articleUpdateId, setArticleUpdateId] = useState(0)
+	const [uploadList, setUploadList] = useState([])
 	const tableBlock = useRef()
 	const mdEditorRef = useRef()
 	const [formRef] = Form.useForm()
 
-	const screeningPass = () => {
-		console.log(screeningClassify, screeningTitle)
+	const articleGet = (classify = null, title = null) => {
+		const params = {classify, title: title === "" ? null : title, page, pageSize, admin: true}
+		getArticle(params).then((res) => {
+			setDataSource(res.data.data)
+			setArticleTotal(res.data.total)
+		})
 	}
 	const screeningReturn = () => {
 		setScreeningClassify(null)
 		setScreeningTitle(null)
-	}
-	const onSelectChange = (selectId) => {
-		setSelectedRowKeys(selectId)
-	}
-	const onChooseThe = () => {
-		console.log(selectedRowKeys)
-		if (selectedRowKeys.length === dataSource.length) {
-			setSelectedRowKeys([])
-		} else if (selectedRowKeys.length === 0) {
-			setSelectedRowKeys(
-				dataSource.map((v) => {
-					return v.id
-				})
-			)
-		} else {
-			// console.log(
-			// 	dataSource.map((v) => {
-			// 		return selectedRowKeys.indexOf(v.key) === -1 {v.key}
-			// 	}),
-			// 	888
-			// )
-		}
+		articleGet()
 	}
 	const drawerFormReturn = () => {
-		formRef.resetFields()
 		setVisible(false)
+		formRef.resetFields()
+		setFormBody("")
+		setArticleLoading(false)
+		setUploadList([])
+		setDrawerTitle("添加文章")
 	}
 	const drawerFormPass = () => {
 		formRef.validateFields().then(
 			() => {
-				console.log(mdEditorRef.current.getMdValue())
-				console.log(formRef.getFieldsValue())
-				drawerFormReturn()
+				setArticleLoading(true)
+				if (drawerTitle === "添加文章") {
+					postArticle({
+						...formRef.getFieldsValue(),
+						date_time: formRef.getFieldsValue().date_time
+							? formRef.getFieldsValue().date_time.format("YYYY-MM-DD HH:mm:ss")
+							: undefined,
+						body: mdEditorRef.current.getHtmlValue(),
+					}).then((res) => {
+						notification.success({
+							message: "文章消息",
+							description: res.data.message,
+						})
+						articleGet()
+						drawerFormReturn()
+					})
+				} else {
+					putArticle({
+						id: articleUpdateId,
+						...formRef.getFieldsValue(),
+						state: formRef.getFieldsValue().state === undefined ? 1 : formRef.getFieldsValue().state,
+						date_time: formRef.getFieldsValue().date_time.format("YYYY-MM-DD HH:mm:ss"),
+						body: mdEditorRef.current.getHtmlValue(),
+					}).then((res) => {
+						notification.success({
+							message: "文章消息",
+							description: res.data.message,
+						})
+						articleGet()
+						drawerFormReturn()
+					})
+				}
 			},
 			(err) => {
 				console.log(err)
@@ -95,272 +121,85 @@ const Index = function () {
 		// eslint-disable-next-line no-underscore-dangle
 		if (event._reactName === "onClick") {
 			setModalThumbnailLoading(true)
-			setTimeout(() => {
-				setThumbnailCurrent(formRef.getFieldsValue().thumbnail)
+			getFile({path: "/Thumbnail"}).then((res) => {
+				setFileData(res.data)
+				setThumbnailCurrent(formRef.getFieldsValue().img_url)
 				setModalThumbnailState(true)
 				setModalThumbnailLoading(false)
-			}, 3000)
+			})
 		}
 	}
 	const fileItemCurrent = (value) => {
-		setThumbnailCurrent(value.url)
+		setThumbnailCurrent(value.name)
 	}
 	const modalThumbnailPass = () => {
-		formRef.setFieldsValue({thumbnail: thumbnailCurrent})
+		formRef.setFieldsValue({img_url: `/Thumbnail/${thumbnailCurrent}`})
 		setModalThumbnailState(false)
 	}
 	const modalThumbnailReturn = () => {
 		setModalThumbnailState(false)
 	}
-	const aaaaa = () => {
+	const articleUpdate = (value) => {
+		setDrawerTitle("编辑文章")
+		setArticleUpdateId(value.id)
+		formRef.setFieldsValue({
+			...value,
+			date_time: moment(value.date_time),
+			state: value.state === 1 ? undefined : value.state,
+		})
+		setFormBody(value.body)
 		setVisible(true)
-		formRef.setFieldsValue({title: "从地上到处都是"})
+	}
+	const pageChange = (pageValue, pageSizeValue) => {
+		setPage(pageValue)
+		setPageSize(pageSizeValue)
+	}
+	const articleDelete = (value) => {
+		deleteArticle({id: value}).then((res) => {
+			notification.success({
+				message: "文章消息",
+				description: res.data.message,
+			})
+			articleGet()
+		})
+	}
+	const uploadBefore = (file) => {
+		const isType = file.type === "image/png" || file.type === "image/jpeg"
+		const isSize = file.size / 1024 / 1024 < 1
+		console.log(isType, isSize)
+		if (!isType || !isSize) {
+			notification.error({
+				message: "媒体消息",
+				description: "请上传小于1M的PNG或JPG格式图片",
+			})
+		} else {
+			setUploadList([...uploadList, file])
+		}
+		return isType || isSize || Upload.LIST_IGNORE
 	}
 
 	useEffect(() => {
 		PubSub.publish("pageName", "文章管理")
 		setTableHeight(tableBlock.current.offsetHeight - 85)
-		setDataSource([
-			{
-				id: "1",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "2",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "3",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "4",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "5",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "6",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "7",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "8",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "9",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "10",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-			{
-				id: "11",
-				title: "程序员全职接单一个月的感触",
-				views: 32,
-				label: [
-					{id: 1, name: "前端"},
-					{id: 2, name: "服务器"},
-					{id: 3, name: "Node"},
-				],
-				state: false,
-				comment: 80,
-				time: "2020-11-29 18:00:00",
-			},
-		])
-		setFileData([
-			{
-				filename: "1",
-				isDirectory: true,
-				createTime: "2021-03-23T06:07:30.409Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "2020",
-				isDirectory: true,
-				createTime: "2020-12-28T15:17:32.055Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "2021",
-				isDirectory: true,
-				createTime: "2021-12-07T14:32:19.318Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "7897",
-				isDirectory: true,
-				createTime: "2021-12-17T03:04:28.675Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "hello",
-				isDirectory: true,
-				createTime: "2021-04-06T12:47:40.072Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "tt",
-				isDirectory: true,
-				createTime: "2021-11-10T08:27:44.925Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "测试目录",
-				isDirectory: true,
-				createTime: "2021-08-12T18:01:51.444Z",
-				size: "4.00KB",
-				type: "",
-				url: "",
-			},
-			{
-				filename: "QQ图片20210527172847.gif",
-				isDirectory: false,
-				createTime: "2021-06-03T06:39:52.694Z",
-				size: "93.65KB",
-				type: "image/gif",
-				url: "/api/nkm-cms/readFile?path=/upload/QQ图片20210527172847.gif",
-			},
-			{
-				filename: "file-icon.zip",
-				isDirectory: false,
-				createTime: "2021-02-05T17:47:46.191Z",
-				size: "12.76KB",
-				type: "application/zip",
-				url: "/api/nkm-cms/readFile?path=/upload/file-icon.zip",
-			},
-			{
-				filename: "下载.jpg",
-				isDirectory: false,
-				createTime: "2021-03-19T03:34:54.369Z",
-				size: "31.08KB",
-				type: "image/jpeg",
-				url: "/api/nkm-cms/readFile?path=/upload/下载.jpg",
-			},
-			{
-				filename: "微信图片_202010221547513.jpg",
-				isDirectory: false,
-				createTime: "2021-03-18T10:12:16.753Z",
-				size: "155.91KB",
-				type: "image/jpeg",
-				url: "/api/nkm-cms/readFile?path=/upload/微信图片_202010221547513.jpg",
-			},
-		])
+		getLabel().then((res) => {
+			setLabelData(res.data.data)
+		})
+		getClassify().then((res) => {
+			setClassifyData(res.data.data)
+		})
 	}, [])
+	useEffect(() => {
+		articleGet()
+	}, [page, pageSize])
 
-	const mdParser = new MarkdownIt(/* Markdown-it options */)
+	const mdParser = new MarkdownIt({
+		highlight: (str, lang) => {
+			return `<pre class="language-${lang}"><code class="line-numbers language-${lang}">${str}</code></pre>`
+		},
+	})
 	const rowSelection = {
 		selectedRowKeys,
-		onChange: onSelectChange,
+		onChange: (selectId) => setSelectedRowKeys(selectId),
 	}
 	return (
 		<div className="the-article">
@@ -369,11 +208,16 @@ const Index = function () {
 					<Select
 						value={screeningClassify}
 						onChange={(value) => setScreeningClassify(value)}
+						allowClear
 						placeholder="请选择文章分类"
 					>
-						<Select.Option value="jack">Jack</Select.Option>
-						<Select.Option value="lucy">Lucy</Select.Option>
-						<Select.Option value="Yiminghe">yiminghe</Select.Option>
+						{classifyData.map((v) => {
+							return (
+								<Select.Option value={v.id} key={v.id}>
+									{v.name}
+								</Select.Option>
+							)
+						})}
 					</Select>
 					<Input
 						value={screeningTitle}
@@ -382,7 +226,7 @@ const Index = function () {
 					/>
 				</div>
 				<div>
-					<Button onClick={screeningPass} type="primary">
+					<Button onClick={() => articleGet(screeningClassify, screeningTitle)} type="primary">
 						查询
 					</Button>
 					<Button onClick={screeningReturn} danger>
@@ -395,7 +239,7 @@ const Index = function () {
 					<Button onClick={() => setVisible(true)} type="primary">
 						添加文章
 					</Button>
-					<Button>删除文章</Button>
+					<Button onClick={() => articleDelete(selectedRowKeys)}>删除文章</Button>
 				</TitleBlock>
 				<div className="table-block" ref={tableBlock}>
 					<Table
@@ -415,43 +259,56 @@ const Index = function () {
 							key="id"
 							render={(state) => (
 								<div className="state-table">
-									<i className="state-icon state-err-icon" />
-									<span>{state ? "显示" : "隐藏"}</span>
+									<i
+										className={
+											// eslint-disable-next-line no-nested-ternary
+											state === 0
+												? "state-icon state-err-icon"
+												: state === 1
+												? "state-icon"
+												: "state-icon state-top-icon"
+										}
+									/>
+									{/* eslint-disable-next-line no-nested-ternary */}
+									<span>{state === 0 ? "隐藏" : state === 1 ? "显示" : "置顶"}</span>
 								</div>
 							)}
 						/>
-						<Table.Column title="浏览量" dataIndex="views" width={150} align="center" key="id" />
-						<Table.Column title="评论数量" dataIndex="comment" width={150} align="center" key="id" />
+						<Table.Column title="浏览量" dataIndex="scan" width={150} align="center" key="id" />
+						<Table.Column title="点赞数量" dataIndex="like" width={150} align="center" key="id" />
 						<Table.Column
-							title="文章标签"
+							title="标签数量"
 							dataIndex="label"
-							width={300}
+							width={150}
 							align="center"
 							key="id"
-							render={(label) => (
-								<>
-									{label.map((v) => {
-										return (
-											<Tag color={randomColor()} key={v.id}>
-												{v.name}
-											</Tag>
-										)
-									})}
-								</>
+							render={(label) => <span>{label.length}</span>}
+						/>
+						<Table.Column
+							title="发布时间"
+							dataIndex="date_time"
+							key="id"
+							render={(dateTime) => (
+								<span>{moment.utc(dateTime).local().format("YYYY-MM-DD HH:mm:ss")}</span>
 							)}
 						/>
-						<Table.Column title="发布时间" dataIndex="time" key="id" />
 						<Table.Column
 							title="操作"
 							width={150}
 							key="id"
-							render={() => (
+							render={(value) => (
 								<>
 									{/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/interactive-supports-focus */}
-									<span onClick={aaaaa} className="edit-btn" role="button">
+									<span onClick={() => articleUpdate(value)} className="edit-btn" role="button">
 										编辑
 									</span>
-									<span className="delete-btn">删除</span>
+									<Popconfirm
+										title="您确定要删除此文章吗？"
+										placement="bottomRight"
+										onConfirm={() => articleDelete([value.id])}
+									>
+										<span className="delete-btn">删除</span>
+									</Popconfirm>
 								</>
 							)}
 						/>
@@ -460,13 +317,14 @@ const Index = function () {
 				<div className="table-config">
 					<div className="table-border">
 						<div className="the-block">
-							<Button onClick={onChooseThe} className="the-btn" type="primary">
-								反选
-							</Button>
+							<span className="choose-num">选择数量：</span>
 							{selectedRowKeys.length}/{dataSource.length}
 						</div>
 						<Pagination
-							total={85}
+							current={page}
+							pageSize={pageSize}
+							total={articleTotal}
+							onChange={pageChange}
 							showSizeChanger
 							showQuickJumper
 							showTotal={(total) => `共 ${total} 条`}
@@ -475,7 +333,7 @@ const Index = function () {
 				</div>
 			</div>
 			<Drawer
-				title="添加文章"
+				title={drawerTitle}
 				visible={visible}
 				closable={false}
 				getContainer={false}
@@ -483,7 +341,7 @@ const Index = function () {
 				width="70%"
 				extra={
 					<Space>
-						<Button onClick={drawerFormPass} type="primary">
+						<Button onClick={drawerFormPass} loading={articleLoading} type="primary">
 							确定
 						</Button>
 						<Button onClick={drawerFormReturn}>取消</Button>
@@ -510,39 +368,52 @@ const Index = function () {
 										rules={[{required: true, message: "请选择文章分类"}]}
 									>
 										<Select placeholder="请选择文章分类">
-											<Select.Option value="xiao">Xiaoxiao Fu</Select.Option>
-											<Select.Option value="mao">Maomao Zhou</Select.Option>
+											{classifyData.map((v) => {
+												return (
+													<Select.Option value={v.id} key={v.id}>
+														{v.name}
+													</Select.Option>
+												)
+											})}
 										</Select>
 									</Form.Item>
 								</Col>
 							</Row>
 							<Row gutter={15}>
 								<Col span={12}>
-									<Form.Item name="label" label="文章标签">
+									<Form.Item
+										name="label"
+										label="文章标签"
+										rules={[{required: true, message: "请选择文章标签"}]}
+									>
 										<Select mode="multiple" placeholder="请选择文章标签">
-											<Select.Option value="Javascript">Javascript</Select.Option>
-											<Select.Option value="CSS3">CSS3</Select.Option>
-											<Select.Option value="NodeJS">NodeJS</Select.Option>
+											{labelData.map((v) => {
+												return (
+													<Select.Option value={v.id} key={v.id}>
+														{v.name}
+													</Select.Option>
+												)
+											})}
 										</Select>
 									</Form.Item>
 								</Col>
 								<Col span={12}>
 									<Form.Item name="state" label="文章状态">
 										<Select allowClear placeholder="请选择文章状态">
-											<Select.Option value="xiao">置顶</Select.Option>
-											<Select.Option value="mao">隐藏</Select.Option>
+											<Select.Option value={2}>置顶</Select.Option>
+											<Select.Option value={0}>隐藏</Select.Option>
 										</Select>
 									</Form.Item>
 								</Col>
 							</Row>
 							<Row gutter={15}>
 								<Col span={12}>
-									<Form.Item name="time" initialValue={moment()} label="发布时间">
+									<Form.Item name="date_time" label="发布时间">
 										<DatePicker showTime style={{width: "100%"}} placeholder="请选择发布时间" />
 									</Form.Item>
 								</Col>
 								<Col span={12}>
-									<Form.Item name="thumbnail" label="缩略图地址">
+									<Form.Item name="img_url" label="缩略图地址">
 										<Input.Search
 											allowClear
 											enterButton="浏览"
@@ -560,7 +431,16 @@ const Index = function () {
 					</Col>
 					<Col span={8}>
 						<ImgCrop aspect={1 / 0.7} grid quality={0.7}>
-							<Upload.Dragger listType="picture" className="thumbnail-upload">
+							<Upload.Dragger
+								className="thumbnail-upload"
+								fileList={uploadList}
+								action="http://127.0.0.1:7001/api/file"
+								data={{path: "/Thumbnail"}}
+								beforeUpload={uploadBefore}
+								maxCount={2}
+								listType="picture"
+								accept=".jpg, .png"
+							>
 								<InboxOutlined style={{color: "#ff4475", fontSize: "40px"}} />
 								<p>单击或拖动文件到此区域进行上传</p>
 							</Upload.Dragger>
@@ -588,9 +468,10 @@ const Index = function () {
 						return (
 							<FileItem
 								file={v}
+								path="/Thumbnail"
 								fileClick={() => fileItemCurrent(v)}
-								className={thumbnailCurrent === v.url ? "file-item-current" : ""}
-								key={v.filename}
+								className={thumbnailCurrent === v.name ? "file-item-current" : ""}
+								key={v.name}
 							/>
 						)
 					})}

@@ -26,8 +26,8 @@
 	color: #666666;
 	font-size: 14px;
 }
-.the-article .main-block .the-btn {
-	margin-right: 10px;
+.the-article .main-block .choose-num {
+	color: #ff4475;
 }
 .the-article .main-block .edit-btn {
 	color: #ff4475;
@@ -53,6 +53,9 @@
 }
 .the-article .main-block .state-err-icon{
 	background-color: #999999;
+}
+.the-article .main-block .state-top-icon{
+	background-color: #ff4475;
 }
 .the-article .thumbnail-upload{
 	height: 206px;

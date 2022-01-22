@@ -1,13 +1,12 @@
 import Axios from "axios"
-// import {notification} from "antd"
+import {notification} from "antd"
 
 Axios.interceptors.request.use(
 	(cof) => {
 		return cof
 	},
 	(err) => {
-		console.log(111)
-		Promise.error(err)
+		Promise.reject(err)
 	}
 )
 
@@ -16,6 +15,17 @@ Axios.interceptors.response.use(
 		return Promise.resolve(res)
 	},
 	(err) => {
+		if (err.response.status === 400) {
+			notification.warning({
+				message: "系统消息",
+				description: err.response.data.message,
+			})
+		} else if (err.response.status === 500) {
+			notification.error({
+				message: "系统消息",
+				description: "服务器错误",
+			})
+		}
 		return Promise.reject(err)
 	}
 )
@@ -24,11 +34,8 @@ const AxiosDoll = function (method, url, params = {}) {
 	return Axios({
 		method,
 		url,
-		baseURL: "http://127.0.0.1:7001",
-		timeout: 3000,
-		headers: {
-			token: sessionStorage.getItem("token"),
-		},
+		baseURL: "http://8.141.163.16",
+		headers: {token: sessionStorage.getItem("token")},
 		...params,
 	})
 }

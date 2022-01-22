@@ -1,6 +1,7 @@
 .file-item-context .file-item {
     width: 130px;
     display: flex;
+    cursor: pointer;
     padding: 15px 10px;
     border-radius: 5px;
     align-items: center;

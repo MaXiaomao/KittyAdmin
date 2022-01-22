@@ -1,17 +1,24 @@
 import {useEffect, useState} from "react"
-import {Image} from "antd"
+import {Image, notification} from "antd"
+import {deleteFile} from "../../axios"
 import "./index.css"
 
 const Index = function (props) {
-	const {file, className, fileClick, context} = props
+	const {file, path, className, fileClick, fileDoubleClick, getData, context} = props
 	const [menuData] = useState(["复制链接", "加入收藏", "删除"])
 	const [menuState, setMenuState] = useState(false)
 	const [menuTop, setMenuTop] = useState(0)
 	const [menuLeft, setMenuLeft] = useState(0)
+	const [imgType] = useState([".jpg", ".png", ".gif"])
 
 	const menuItemClick = (name, contextFile) => {
 		if (name === "复制链接") {
-			//
+			navigator.clipboard.writeText(`${path}/${contextFile.name}`).then(() => {
+				notification.success({
+					message: "媒体消息",
+					description: "文件链接复制成功",
+				})
+			})
 		} else if (name === "加入收藏") {
 			const fileData = JSON.parse(window.sessionStorage.getItem("fileData"))
 			if (fileData !== null) {
@@ -21,7 +28,13 @@ const Index = function (props) {
 				window.sessionStorage.setItem("fileData", JSON.stringify([contextFile]))
 			}
 		} else if (name === "删除") {
-			//
+			deleteFile({path: `${path}/${contextFile.name}`}).then((res) => {
+				getData()
+				notification.success({
+					message: "媒体消息",
+					description: res.data.message,
+				})
+			})
 		}
 	}
 	const contextMenuShow = (e) => {
@@ -45,15 +58,23 @@ const Index = function (props) {
 				onBlur={() => setMenuState(false)}
 				onClick={fileClick}
 				onKeyDown={fileClick}
+				onDoubleClick={fileDoubleClick}
 				role="button"
 				tabIndex="0"
 			>
-				{file.type.indexOf("image") !== -1 ? (
-					<Image src={`http://cms-test.xuanmo.xin${file.url}`} width={100} height={100} />
+				{imgType.indexOf(file.type) !== -1 ? (
+					<Image
+						src={`/upload${path}/${file.name}`}
+						width={100}
+						height={100}
+						preview={{
+							mask: "预览",
+						}}
+					/>
 				) : (
 					<i className={file.type === "" ? "folder-icon" : "unknown-icon"} />
 				)}
-				<span>{file.filename}</span>
+				<span>{file.name}</span>
 			</div>
 			<div className="context" style={{top: menuTop, left: menuLeft, display: menuState ? "block" : "none"}}>
 				{menuData.map((v) => {
