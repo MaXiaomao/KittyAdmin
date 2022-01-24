@@ -192,11 +192,7 @@ const Index = function () {
 		articleGet()
 	}, [page, pageSize])
 
-	const mdParser = new MarkdownIt({
-		highlight: (str, lang) => {
-			return `<pre class="language-${lang}"><code class="line-numbers language-${lang}">${str}</code></pre>`
-		},
-	})
+	const mdParser = new MarkdownIt()
 	const rowSelection = {
 		selectedRowKeys,
 		onChange: (selectId) => setSelectedRowKeys(selectId),
