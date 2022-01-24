@@ -400,6 +400,7 @@ const Index = function () {
 								<Col span={12}>
 									<Form.Item name="state" label="文章状态">
 										<Select allowClear placeholder="请选择文章状态">
+											<Select.Option value={3}>推荐</Select.Option>
 											<Select.Option value={2}>置顶</Select.Option>
 											<Select.Option value={0}>隐藏</Select.Option>
 										</Select>
