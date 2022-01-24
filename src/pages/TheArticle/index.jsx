@@ -86,7 +86,7 @@ const Index = function () {
 						date_time: formRef.getFieldsValue().date_time
 							? formRef.getFieldsValue().date_time.format("YYYY-MM-DD HH:mm:ss")
 							: undefined,
-						body: mdEditorRef.current.getHtmlValue(),
+						body: mdEditorRef.current.getMdValue(),
 					}).then((res) => {
 						notification.success({
 							message: "文章消息",
@@ -101,7 +101,7 @@ const Index = function () {
 						...formRef.getFieldsValue(),
 						state: formRef.getFieldsValue().state === undefined ? 1 : formRef.getFieldsValue().state,
 						date_time: formRef.getFieldsValue().date_time.format("YYYY-MM-DD HH:mm:ss"),
-						body: mdEditorRef.current.getHtmlValue(),
+						body: mdEditorRef.current.getMdValue(),
 					}).then((res) => {
 						notification.success({
 							message: "文章消息",
