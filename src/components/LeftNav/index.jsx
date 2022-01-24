@@ -69,7 +69,7 @@ const Index = function () {
 			<Menu defaultSelectedKeys={defaultSelectedKeys} inlineIndent={48} mode="inline">
 				{navItemArr.map((v) => {
 					return (
-						<Menu.Item icon={v.icon} key={v.key}>
+						<Menu.Item icon={v.icon} disabled={v.name === "系统设置"} key={v.key}>
 							<Link to={v.key}>{v.name}</Link>
 						</Menu.Item>
 					)

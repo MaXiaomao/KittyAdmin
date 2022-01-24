@@ -1,0 +1,21 @@
+.set-up-the{
+    padding: 15px;
+    height: calc(100% - 60px);
+}
+.set-up-the .main-block{
+    height: 100%;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+.set-up-the .row-block{
+    padding: 15px;
+}
+.set-up-the h6{
+    margin: 0;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 0 0 5px 5px;
+}
+.set-up-the .m-input{
+    margin-bottom: 20px;
+}
