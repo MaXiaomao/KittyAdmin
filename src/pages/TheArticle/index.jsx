@@ -435,7 +435,7 @@ const Index = function () {
 							<Upload.Dragger
 								className="thumbnail-upload"
 								fileList={uploadList}
-								action="http://127.0.0.1:7001/api/file"
+								action="/api/file"
 								data={{path: "/Thumbnail"}}
 								beforeUpload={uploadBefore}
 								maxCount={2}
