@@ -86,6 +86,7 @@ const Index = function () {
 						date_time: formRef.getFieldsValue().date_time
 							? formRef.getFieldsValue().date_time.format("YYYY-MM-DD HH:mm:ss")
 							: undefined,
+						img_url: formRef.getFieldsValue().img_url ? formRef.getFieldsValue() : undefined,
 						body: mdEditorRef.current.getMdValue(),
 					}).then((res) => {
 						notification.success({
@@ -101,6 +102,7 @@ const Index = function () {
 						...formRef.getFieldsValue(),
 						state: formRef.getFieldsValue().state === undefined ? 1 : formRef.getFieldsValue().state,
 						date_time: formRef.getFieldsValue().date_time.format("YYYY-MM-DD HH:mm:ss"),
+						img_url: formRef.getFieldsValue().img_url ? formRef.getFieldsValue() : undefined,
 						body: mdEditorRef.current.getMdValue(),
 					}).then((res) => {
 						notification.success({
