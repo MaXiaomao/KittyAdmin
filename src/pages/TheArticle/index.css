@@ -58,8 +58,8 @@
 	background-color: #ff4475;
 }
 .the-article .thumbnail-upload{
-	height: 206px;
 	margin-top: 30px;
+	height: 206px !important;
 }
 .the-article .thumbnail-upload p{
 	margin-top: 15px !important;
