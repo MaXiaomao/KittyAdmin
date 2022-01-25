@@ -267,8 +267,10 @@ const Index = function () {
 												: "state-icon state-top-icon"
 										}
 									/>
-									{/* eslint-disable-next-line no-nested-ternary */}
-									<span>{state === 0 ? "隐藏" : state === 1 ? "显示" : "置顶"}</span>
+									<span>
+										{/* eslint-disable-next-line no-nested-ternary */}
+										{state === 0 ? "隐藏" : state === 1 ? "显示" : state === 2 ? "置顶" : "推荐"}
+									</span>
 								</div>
 							)}
 						/>
