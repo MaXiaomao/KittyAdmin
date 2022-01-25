@@ -33,6 +33,7 @@ import "./index.css"
 
 const Index = function () {
 	const [screeningClassify, setScreeningClassify] = useState()
+	const [screeningState, setScreeningState] = useState()
 	const [screeningTitle, setScreeningTitle] = useState()
 	const [dataSource, setDataSource] = useState([])
 	const [selectedRowKeys, setSelectedRowKeys] = useState([])
@@ -56,8 +57,8 @@ const Index = function () {
 	const mdEditorRef = useRef()
 	const [formRef] = Form.useForm()
 
-	const articleGet = (classify = null, title = null) => {
-		const params = {classify, title: title === "" ? null : title, page, pageSize, admin: true}
+	const articleGet = (classify = null, state = null, title = null) => {
+		const params = {classify, state, title: title === "" ? null : title, page, pageSize, admin: true}
 		getArticle(params).then((res) => {
 			setDataSource(res.data.data)
 			setArticleTotal(res.data.total)
@@ -65,6 +66,7 @@ const Index = function () {
 	}
 	const screeningReturn = () => {
 		setScreeningClassify(null)
+		setScreeningState(null)
 		setScreeningTitle(null)
 		articleGet()
 	}
@@ -217,6 +219,17 @@ const Index = function () {
 							)
 						})}
 					</Select>
+					<Select
+						value={screeningState}
+						onChange={(value) => setScreeningState(value)}
+						allowClear
+						placeholder="请选择文章状态"
+					>
+						<Select.Option value={3}>推荐</Select.Option>
+						<Select.Option value={2}>置顶</Select.Option>
+						<Select.Option value={1}>显示</Select.Option>
+						<Select.Option value={0}>隐藏</Select.Option>
+					</Select>
 					<Input
 						value={screeningTitle}
 						onChange={(e) => setScreeningTitle(e.target.value)}
@@ -224,7 +237,10 @@ const Index = function () {
 					/>
 				</div>
 				<div>
-					<Button onClick={() => articleGet(screeningClassify, screeningTitle)} type="primary">
+					<Button
+						onClick={() => articleGet(screeningClassify, screeningState, screeningTitle)}
+						type="primary"
+					>
 						查询
 					</Button>
 					<Button onClick={screeningReturn} danger>
