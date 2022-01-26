@@ -32,7 +32,8 @@ Axios.interceptors.response.use(
 				description: "登录超时，即将退出",
 			})
 			sessionStorage.removeItem("token")
-			useNavigate("/login", {replaceState: true})
+			const navigate = useNavigate()
+			navigate("/login", {replaceState: true})
 		}
 		return Promise.reject(err)
 	}
