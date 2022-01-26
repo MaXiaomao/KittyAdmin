@@ -1,4 +1,5 @@
 import Axios from "axios"
+import {useNavigate} from "react-router-dom"
 import {notification} from "antd"
 
 Axios.interceptors.request.use(
@@ -25,6 +26,13 @@ Axios.interceptors.response.use(
 				message: "系统消息",
 				description: "服务器错误",
 			})
+		} else if (err.response.status === 401) {
+			notification.error({
+				message: "系统消息",
+				description: "登录超时，即将退出",
+			})
+			sessionStorage.removeItem("token")
+			useNavigate("/login", {replaceState: true})
 		}
 		return Promise.reject(err)
 	}
