@@ -24,6 +24,7 @@ const Index = function () {
 	const modalFormReturn = () => {
 		modalForm.resetFields()
 		setModalState(false)
+		setModalLoading(false)
 		setModalTitle("添加分类")
 	}
 	const modalFormPass = () => {
@@ -186,7 +187,19 @@ const Index = function () {
 				<Form preserve={false} form={modalForm}>
 					<Row justify="space-between" gutter={15}>
 						<Col span={16}>
-							<Form.Item label="名称" name="name" rules={[{required: true, message: "请输入分类名称"}]}>
+							<Form.Item
+								label="名称"
+								name="name"
+								rules={[
+									{
+										require: true,
+										min: 3,
+										max: 6,
+										pattern: "^[\u4E00-\u9FA5A-Za-z]+$",
+										message: "名称由3-6个字符、汉字、字母组成",
+									},
+								]}
+							>
 								<Input placeholder="请输入分类名称" />
 							</Form.Item>
 						</Col>

@@ -34,7 +34,7 @@ const AxiosDoll = function (method, url, params = {}) {
 	return Axios({
 		method,
 		url,
-		headers: {token: sessionStorage.getItem("token")},
+		headers: {Authorization: `Bearer ${sessionStorage.getItem("token")}`},
 		...params,
 	})
 }
